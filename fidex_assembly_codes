@@ -1,0 +1,97 @@
+#ifDef proc::xPblze6
+#set proc::xPblze6::scrpdSize, 64 ; [64, 128, 256]
+#set proc::xPblze6::clkFreq, 100000000 ; in Hz
+#set IOdev::BRAM0::en, TRUE
+#set IOdev::BRAM0::type, mem
+#set IOdev::BRAM0::size, 4096
+#set instmem::pageSize, 4096
+#set instmem::pageCount, 1
+#set instmem::sharedMemLocation, loMem ; [ hiMem, loMem ]
+#set IOdev::BRAM0::value, instMem
+#set IOdev::BRAM0::vhdlEn, TRUE
+#set IOdev::BRAM0::vhdlEntityName, "BRAM0"
+#set IOdev::BRAM0::vhdlTmplFile, "ROM_form.vhd"
+#set IOdev::BRAM0::vhdlTargetFile, "BRAM0.vhd"
+#endIf
+#ORG ADDR, 0x00
+	LOAD s0,4
+	LOAD s1,0
+	LOAD s2,1
+	LOAD s3,9
+	LOAD s4,0
+	LOAD s5,0
+	LOAD s6,5
+	
+	LOAD s7,1
+	LOAD s8,0
+	LOAD s9,1
+main_loop:
+	COMP s7,10
+	JUMP C,start1
+	JUMP end
+start1:
+	LOAD sA,0
+	COMP s9,s0
+	JUMP C,	count1
+start2:
+	ADD sB,sA
+	LOAD sA,0
+	COMP s9,s1
+	JUMP C, count2
+start3:
+	ADD sB,sA
+	LOAD sA,0
+	COMP s9,s2
+	JUMP C, count3
+start4:	
+	ADD sB,sA
+	LOAD sA,0
+	COMP s9,s3
+	JUMP C, count4
+start5:	
+	ADD sB,sA
+	LOAD sA,0
+	COMP s9,s4
+	JUMP C, count5
+start6:	
+	ADD sB,sA
+	LOAD sA,0
+	COMP s9,s5
+	JUMP C, count6
+line_end:
+	LOAD s9,s7
+	ADD s7,1
+	ADD s8,1
+	COMP s6,s9
+	JUMP C,main_loop
+	ADD sB,sA
+	LOAD sA,0
+	JUMP main_loop
+	
+count1:
+	COMP s8,s1
+	JUMP C,start2
+	ADD sA,1
+count2:	
+	COMP s8,s2
+	JUMP C,start3
+	ADD sA,1
+count3:	
+	COMP s8,s3
+	JUMP C,start4
+	ADD sA,1
+count4:	
+	COMP s8,s4
+	JUMP C,start5
+	ADD sA,1
+count5:
+	COMP s8,s5
+	JUMP C,start6
+	ADD sA,1
+count6:
+	COMP s8,s6
+	JUMP C,line_end
+	ADD sA,1
+	JUMP line_end
+	
+end: JUMP end
